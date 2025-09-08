@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   const page = Number(pageParam);
   const limit = Number(limitParam);
 
-  let query: any = { userId: session.user.id };
+  const query: any = { userId: session.user.id };
 
   // ✅ Search by title OR description
   if (search) {
