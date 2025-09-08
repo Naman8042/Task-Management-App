@@ -1,10 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { LoginForm } from "@/components/login-form";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+
+
+
 export default function Page() {
+  const router = useRouter();
+  const {  status } = useSession();
+  
+  useEffect(() => {
+    if (status === "loading") return; // Avoid redirection during loading
+  
+    if (status !== "authenticated") {
+     
+    } else {
+       router.push("/dashboard");
+    }
+  }, [status, router]);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 

@@ -50,7 +50,7 @@ export default function AddTaskPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-6 w-full">
+    <div className="flex h-[90vh] sm:min-h-screen items-center justify-center p-6 w-full">
       <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle>Add New Task</CardTitle>
