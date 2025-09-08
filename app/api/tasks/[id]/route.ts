@@ -8,14 +8,16 @@ connect();
 
 // GET a single task
 export async function GET(
-  { params }: { params: { id: string } }
-) {
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+){
   try {
     const session = await getServerSession(option);
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    const { id } = await params; // params is a Promise in Next.js 15
+    const params = await context.params;
+    const { id } = params;// params is a Promise in Next.js 15
     const task = await Task.findOne({ _id: id, userId: session.user.id });
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
@@ -30,14 +32,15 @@ export async function GET(
 // Update task
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  context: { params: Promise<{ id: string }> }
+){
   try {
     const session = await getServerSession(option);
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const body = await req.json();
     const task = await Task.findOneAndUpdate(
       { _id: id, userId: session.user.id },
@@ -56,14 +59,16 @@ export async function PUT(
 
 // Delete task
 export async function DELETE(
-  { params }: { params: { id: string } }
-) {
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+){
   try {
     const session = await getServerSession(option);
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    const { id } = await params;
+    const params = await context.params;
+    const { id } = params;
     const task = await Task.findOneAndDelete({ _id: id, userId: session.user.id });
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
