@@ -6,21 +6,16 @@ import Task from "@/models/taskSchema";
 
 connect();
 
-interface RouteContext {
-  params: {
-    id: string;
-  };
-}
-
-// 🔎 GET a single task
-export async function GET( context: RouteContext) {
+// GET a single task
+export async function GET(
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(option);
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-
-    const { id } = await context.params;
+    const { id } = await params; // params is a Promise in Next.js 15
     const task = await Task.findOne({ _id: id, userId: session.user.id });
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
@@ -32,17 +27,18 @@ export async function GET( context: RouteContext) {
   }
 }
 
-// ✏️ Update task
-export async function PUT(req: NextRequest, context: RouteContext) {
+// Update task
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(option);
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-
-    const { id } = await context.params;
+    const { id } = await params;
     const body = await req.json();
-
     const task = await Task.findOneAndUpdate(
       { _id: id, userId: session.user.id },
       body,
@@ -58,15 +54,16 @@ export async function PUT(req: NextRequest, context: RouteContext) {
   }
 }
 
-// 🗑 Delete task
-export async function DELETE(context: RouteContext) {
+// Delete task
+export async function DELETE(
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(option);
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-
-    const { id } = await context.params;
+    const { id } = await params;
     const task = await Task.findOneAndDelete({ _id: id, userId: session.user.id });
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
