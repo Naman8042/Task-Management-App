@@ -6,15 +6,25 @@ import Task from "@/models/taskSchema";
 
 connect();
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+interface RouteContext {
+  params: {
+    id: string;
+  };
+}
+
+// 🔎 GET a single task
+export async function GET( context: RouteContext) {
   try {
     const session = await getServerSession(option);
-    if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-    const { id } = params;
+    const { id } = await context.params;
     const task = await Task.findOne({ _id: id, userId: session.user.id });
-    if (!task) return NextResponse.json({ message: "Task not found" }, { status: 404 });
-
+    if (!task) {
+      return NextResponse.json({ message: "Task not found" }, { status: 404 });
+    }
     return NextResponse.json(task, { status: 200 });
   } catch (err) {
     console.error(err);
@@ -22,12 +32,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+// ✏️ Update task
+export async function PUT(req: NextRequest, context: RouteContext) {
   try {
     const session = await getServerSession(option);
-    if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-    const { id } = params;
+    const { id } = await context.params;
     const body = await req.json();
 
     const task = await Task.findOneAndUpdate(
@@ -35,9 +48,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       body,
       { new: true }
     );
-
-    if (!task) return NextResponse.json({ message: "Task not found" }, { status: 404 });
-
+    if (!task) {
+      return NextResponse.json({ message: "Task not found" }, { status: 404 });
+    }
     return NextResponse.json(task, { status: 200 });
   } catch (err) {
     console.error(err);
@@ -45,15 +58,19 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+// 🗑 Delete task
+export async function DELETE(context: RouteContext) {
   try {
     const session = await getServerSession(option);
-    if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-    const { id } = params;
+    const { id } = await context.params;
     const task = await Task.findOneAndDelete({ _id: id, userId: session.user.id });
-    if (!task) return NextResponse.json({ message: "Task not found" }, { status: 404 });
-
+    if (!task) {
+      return NextResponse.json({ message: "Task not found" }, { status: 404 });
+    }
     return NextResponse.json({ message: "Task deleted successfully" }, { status: 200 });
   } catch (err) {
     console.error(err);
