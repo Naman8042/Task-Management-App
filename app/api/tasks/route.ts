@@ -5,6 +5,15 @@ import { connect } from "@/lib/dbConnect";
 import Task from "@/models/taskSchema";
 
 
+interface TaskQuery {
+  userId: string;
+  title?: { $regex: string; $options: string };
+  description?: { $regex: string; $options: string };
+  status?: string;
+  $or?: Record<string, unknown>[];
+}
+
+
 
 
 export async function GET(req: NextRequest) {
@@ -22,7 +31,7 @@ export async function GET(req: NextRequest) {
   const page = Number(pageParam);
   const limit = Number(limitParam);
 
-  const query: any = { userId: session.user.id };
+  const query: TaskQuery = { userId: session.user.id };
 
   // ✅ Search by title OR description
   if (search) {
