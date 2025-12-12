@@ -34,9 +34,7 @@ yarn dev
 
 Build the Docker image in PowerShell / VS Code terminal (single line):
 
-1. 
-
-docker build --build-arg MONGO_URI="your_mongodb_connection_string" --build-arg NEXTAUTH_SECRET="your_nextauth_secret" -t task-manager-app .
+1. docker build --build-arg MONGO_URI="your_mongodb_connection_string" --build-arg NEXTAUTH_SECRET="your_nextauth_secret" -t task-manager-app .
 
 2 Run the container:
 

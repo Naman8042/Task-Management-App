@@ -17,6 +17,8 @@ interface LoginProps {
   setPassword: Dispatch<SetStateAction<string>>;
   setConfirmPassword: Dispatch<SetStateAction<string>>;
   signupHandler: (e: React.FormEvent) => Promise<void>;
+  // Optional: Add isLoading state for button control during submission
+  isLoading?: boolean; 
 }
 
 export function SignupForm({
@@ -24,59 +26,83 @@ export function SignupForm({
   setPassword,
   signupHandler,
   setConfirmPassword,
+  isLoading = false,
 }: LoginProps) {
   return (
-    <div className={cn("flex flex-col gap-6")}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>Enter your email below to log in</CardDescription>
+    // Outer container unchanged: maintains center and screen height
+    <div className={cn("flex justify-center items-center min-h-screen p-6 sm:p-4 md:p-8")}>
+      
+      <Card className="w-full max-w-sm md:max-w-md lg:max-w-lg shadow-none border-none sm:shadow-lg sm:border sm:border-gray-100 dark:sm:border-gray-800">
+        <CardHeader className="space-y-1 text-center pb-4">
+          <CardTitle className="text-3xl font-extrabold tracking-tight">
+            Join FocusFlow
+          </CardTitle>
+          <CardDescription>
+            Create your account to start managing your tasks.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={signupHandler}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              
+              {/* Email Input Group */}
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email Address</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="name@example.com"
                   required
                   onChange={(e) => setEmail(e.target.value)}
+                  className="focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
+              
+              {/* Password Input Group */}
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="password"
+                  placeholder="••••••••"
                   required
                   onChange={(e) => setPassword(e.target.value)}
+                  className="focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
+              
+              {/* Confirm Password Input Group */}
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Confirm Password</Label>
-                </div>
+                <Label htmlFor="confirm-password">Confirm Password</Label> 
                 <Input
-                  id="confirmpassword"
+                  id="confirm-password"
                   type="password"
-                  placeholder="Confirm Password"
+                  placeholder="••••••••"
                   required
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Signup
+              
+              {/* Signup Button */}
+              <Button 
+                type="submit" 
+                className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 transition-colors"
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating Account..." : "Sign Up"}
               </Button>
+              
             </div>
-            <div className="mt-4 text-center text-sm">
+            
+            {/* Login Link */}
+            <div className="mt-6 text-center text-sm">
               Already have an account?{" "}
-              <Link href="/login" className="text-[#6aa4e0] font-semibold">
-                Login
+              <Link
+                href="/"
+                className="ml-1 font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-500 transition-colors"
+              >
+                Sign In
               </Link>
             </div>
           </form>

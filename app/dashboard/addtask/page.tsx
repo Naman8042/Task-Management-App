@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, Send } from "lucide-react"; // Import Loader2 and Send icons
 
 export default function AddTaskPage() {
   const router = useRouter();
@@ -40,7 +41,8 @@ export default function AddTaskPage() {
         status,
       });
       toast.success("Task created successfully!");
-      router.push("/dashboard");
+      // Navigate to dashboard after success
+      router.push("/dashboard"); 
     } catch (error) {
       console.error(error);
       toast.error("Failed to create task");
@@ -50,46 +52,59 @@ export default function AddTaskPage() {
   }
 
   return (
-    <div className="flex h-[90vh] sm:min-h-screen items-center justify-center p-6 w-full">
-      <Card className="w-full max-w-lg">
+    // 1. IMPROVEMENT: Use p-6/p-10 for outer padding consistency
+    <div className="flex min-h-screen items-center justify-center p-6 md:p-10 w-full bg-gray-50 dark:bg-gray-900">
+      
+      {/* 2. IMPROVEMENT: Added shadow and border for better definition */}
+      <Card className="w-full max-w-lg shadow-xl border border-gray-200 dark:border-gray-800">
         <CardHeader>
-          <CardTitle>Add New Task</CardTitle>
-          <CardDescription>Fill in the details to create a new task.</CardDescription>
+          <CardTitle className="text-3xl font-bold text-gray-800 dark:text-white">Create New Task</CardTitle>
+          <CardDescription>
+            Fill in the details for your new task. You can edit it later.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            
             {/* Title */}
-            <div>
-              <Label htmlFor="title" className="mb-2">Title</Label>
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                placeholder="Enter task title"
+                placeholder="e.g., Fix homepage bug"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
+                // 3. IMPROVEMENT: Consistent Indigo focus styling
+                className="focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
             {/* Description */}
-            <div>
-              <Label htmlFor="description" className="mb-2">Description</Label>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
-                placeholder="Enter task description"
+                placeholder="A detailed explanation of the task..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                rows={4}
+                rows={5} // Slightly increased height for better visibility
+                // 3. IMPROVEMENT: Consistent Indigo focus styling
+                className="resize-none focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
             {/* Status */}
-            <div>
-              <Label htmlFor="status" className="mb-2">Status</Label>
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
               <Select
                 value={status}
                 onValueChange={(value) => setStatus(value)}
               >
-                <SelectTrigger id="status" className="w-full">
+                <SelectTrigger 
+                    id="status" 
+                    className="w-full focus:ring-indigo-500 focus:border-indigo-500"
+                >
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -100,8 +115,22 @@ export default function AddTaskPage() {
             </div>
 
             {/* Submit button */}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Saving..." : "Add Task"}
+            <Button 
+              type="submit" 
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 transition-colors flex items-center gap-2" 
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" /> 
+                  Add Task
+                </>
+              )}
             </Button>
           </form>
         </CardContent>
