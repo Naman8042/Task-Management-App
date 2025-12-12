@@ -16,14 +16,25 @@ export default function Page() {
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false); 
 
+  // 1. New State to track if the client component has mounted
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
-    if (status === "loading") return; 
+    // 2. Set mounted state to true once the component mounts
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    // 3. Only proceed if the client component has mounted AND session status is known
+    if (status === "loading" || !isMounted) return; 
     
+    // We can safely read searchParams here because isMounted is true
+    const callbackUrl = searchParams.get('callbackUrl') || "/dashboard";
+
     if (status === "authenticated") {
-      const callbackUrl = searchParams.get('callbackUrl') || "/dashboard";
       router.replace(callbackUrl);
     }
-  }, [status, router, searchParams]);
+  }, [status, router, searchParams, isMounted]); // Added isMounted to the dependency array
 
   const loginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +42,7 @@ export default function Page() {
     if (isLoading) return; 
     setIsLoading(true);
     
+    // The value read here is safe because the component is mounted when the button is clicked.
     const callbackUrl = searchParams.get('callbackUrl') || "/dashboard";
 
     try {
@@ -57,7 +69,8 @@ export default function Page() {
     }
   };
 
-  if (status === "loading" || status === "authenticated") {
+  // 4. Render a simple loader if status is loading or if the component hasn't mounted yet.
+  if (status === "loading" || status === "authenticated" || !isMounted) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <p className="text-lg text-gray-500 dark:text-gray-400">Loading...</p>
@@ -72,6 +85,7 @@ export default function Page() {
           setEmail={setEmail}
           loginHandler={loginHandler}
           setPassword={setPassword}
+
         />
       </div>
     </div>

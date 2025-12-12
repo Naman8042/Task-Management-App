@@ -6,10 +6,7 @@ import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { LayoutList, PlusCircle, LogOut, User } from "lucide-react"; // Import User icon
 
-// Define the Session interface based on what you receive from useSession()
-interface SidebarProps {
-  userEmail: string | undefined; // Pass the user's email here
-}
+
 
 // Updated component signature to accept userEmail
 export default function Sidebar() {
