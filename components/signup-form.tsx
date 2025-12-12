@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Dispatch, SetStateAction } from "react";
+import { Loader2 } from "lucide-react"; // Import Loader2 for the button loading state
 import {
   Card,
   CardContent,
@@ -12,24 +13,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-interface LoginProps {
+// 1. UPDATED INTERFACE to include the setter for the name field
+interface SignupProps {
+  setName: Dispatch<SetStateAction<string>>; // <-- ADDED
   setEmail: Dispatch<SetStateAction<string>>;
   setPassword: Dispatch<SetStateAction<string>>;
   setConfirmPassword: Dispatch<SetStateAction<string>>;
   signupHandler: (e: React.FormEvent) => Promise<void>;
-  // Optional: Add isLoading state for button control during submission
   isLoading?: boolean; 
 }
 
 export function SignupForm({
+  setName, // <-- Destructure the new setter
   setEmail,
   setPassword,
   signupHandler,
   setConfirmPassword,
   isLoading = false,
-}: LoginProps) {
+}: SignupProps) { // Use the updated interface
   return (
-    // Outer container unchanged: maintains center and screen height
     <div className={cn("flex justify-center items-center min-h-screen p-6 sm:p-4 md:p-8")}>
       
       <Card className="w-full max-w-sm md:max-w-md lg:max-w-lg shadow-none border-none sm:shadow-lg sm:border sm:border-gray-100 dark:sm:border-gray-800">
@@ -44,6 +46,19 @@ export function SignupForm({
         <CardContent>
           <form onSubmit={signupHandler}>
             <div className="flex flex-col gap-4">
+              
+              {/* 2. ADDED NAME INPUT GROUP */}
+              <div className="grid gap-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="John Doe"
+                  required
+                  onChange={(e) => setName(e.target.value)}
+                  className="focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
               
               {/* Email Input Group */}
               <div className="grid gap-2">
@@ -90,7 +105,7 @@ export function SignupForm({
                 className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 transition-colors"
                 disabled={isLoading}
               >
-                {isLoading ? "Creating Account..." : "Sign Up"}
+                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Creating Account...</> : "Sign Up"}
               </Button>
               
             </div>
@@ -99,7 +114,7 @@ export function SignupForm({
             <div className="mt-6 text-center text-sm">
               Already have an account?{" "}
               <Link
-                href="/"
+                href="/login" // Changed href from "/" to "/login" (assuming the login page is at /login)
                 className="ml-1 font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-500 transition-colors"
               >
                 Sign In

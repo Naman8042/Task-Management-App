@@ -8,6 +8,7 @@ import axios from "axios";
 
 export default function Page() {
   const router = useRouter();
+  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmpassword, setConfirmPassword] = useState<string>("");
@@ -20,7 +21,7 @@ export default function Page() {
     }
 
     try {
-      const { data } = await axios.post("/api/signup", { email, password });
+      const { data } = await axios.post("/api/signup", { email, password ,name});
       if (data.success) {
         toast.success("Account created successfully");
         router.push("/");
@@ -37,6 +38,7 @@ export default function Page() {
     <div className="flex h-dvh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-md">
         <SignupForm
+        setName={setName}
           setConfirmPassword={setConfirmPassword}
           setEmail={setEmail}
           signupHandler={signupHandler}
