@@ -32,7 +32,7 @@ export function SignupForm({
   isLoading = false,
 }: SignupProps) { // Use the updated interface
   return (
-    <div className={cn("flex justify-center items-center min-h-screen p-6 sm:p-4 md:p-8")}>
+    <div className={cn("flex justify-center items-center min-h-screen p-4 sm:p-4 md:p-8")}>
       
       <Card className="w-full max-w-sm md:max-w-md lg:max-w-lg shadow-none border-none sm:shadow-lg sm:border sm:border-gray-100 dark:sm:border-gray-800">
         <CardHeader className="space-y-1 text-center pb-4">
@@ -114,7 +114,7 @@ export function SignupForm({
             <div className="mt-6 text-center text-sm">
               Already have an account?{" "}
               <Link
-                href="/login" // Changed href from "/" to "/login" (assuming the login page is at /login)
+                href="/" // Changed href from "/" to "/login" (assuming the login page is at /login)
                 className="ml-1 font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-500 transition-colors"
               >
                 Sign In

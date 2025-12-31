@@ -79,7 +79,7 @@ export default function LoginContainer() {
   }
 
   return (
-    <div className="flex h-dvh w-full items-center justify-center p-6 md:p-10">
+    <div className="flex h-dvh w-full items-center justify-center p-4 md:p-10">
       <div className="w-full max-w-sm">
         <LoginForm
           setEmail={setEmail}
